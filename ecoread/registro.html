@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear cuenta | EcoRead</title>
+    <link rel="icon" href="img/logo.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+
+<body>
+    <!-- Encabezado -->
+    <header class="encabezado">
+        <!-- TODO: cambiar a index.html cuando exista la página de inicio -->
+        <a class="marca" href="login.html">
+            <img src="img/logo.svg" alt="" width="36" height="36">
+            <span>EcoRead</span>
+        </a>
+        <nav aria-label="Menú principal">
+            <ul>
+                <li><a href="login.html">Iniciar sesión</a></li>
+                <li><a href="registro.html" aria-current="page">Crear cuenta</a></li>
+                <li><a href="perfil.html">Mi perfil</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="pagina pagina-registro">
+        <!-- Formulario de registro -->
+        <section>
+            <h1>Crea tu cuenta</h1>
+            <p class="intro">Publica los libros que ya no usas y encuentra los que necesitas para tu próximo curso.</p>
+
+            <form id="formRegistro" action="php/registro.php" method="POST" onsubmit="return validarRegistro()" novalidate>
+                <div class="campo">
+                    <label for="nombre">Nombre completo</label>
+                    <input type="text" id="nombre" name="nombre" placeholder="Ej: María López Vargas"
+                        autocomplete="name" aria-describedby="error-nombre" oninput="actualizarFicha()">
+                    <small class="error" id="error-nombre" aria-live="polite"></small>
+                </div>
+
+                <div class="fila">
+                    <div class="campo">
+                        <label for="correo">Correo</label>
+                        <input type="email" id="correo" name="correo" placeholder="nombre@universidad.ac.cr"
+                            autocomplete="email" aria-describedby="error-correo" oninput="actualizarFicha()">
+                        <small class="error" id="error-correo" aria-live="polite"></small>
+                    </div>
+                    <div class="campo">
+                        <label for="telefono">Teléfono (opcional)</label>
+                        <input type="tel" id="telefono" name="telefono" placeholder="8888-8888"
+                            autocomplete="tel" aria-describedby="ayuda-telefono error-telefono">
+                        <small class="ayuda" id="ayuda-telefono">Solo se comparte al coordinar un intercambio.</small>
+                        <small class="error" id="error-telefono" aria-live="polite"></small>
+                    </div>
+                </div>
+
+                <div class="fila">
+                    <div class="campo">
+                        <label for="universidad">Universidad</label>
+                        <select id="universidad" name="universidad" aria-describedby="error-universidad"
+                            onchange="actualizarFicha()">
+                            <option value="">Selecciona una</option>
+                            <option value="fidelitas">Universidad Fidélitas</option>
+                            <option value="ucr">Universidad de Costa Rica</option>
+                            <option value="tec">Tecnológico de Costa Rica</option>
+                            <option value="una">Universidad Nacional</option>
+                            <option value="uned">Universidad Estatal a Distancia</option>
+                            <option value="otra">Otra universidad</option>
+                        </select>
+                        <small class="error" id="error-universidad" aria-live="polite"></small>
+                    </div>
+                    <div class="campo">
+                        <label for="carrera">Carrera</label>
+                        <input type="text" id="carrera" name="carrera" placeholder="Ej: Ingeniería en Sistemas"
+                            aria-describedby="error-carrera" oninput="actualizarFicha()">
+                        <small class="error" id="error-carrera" aria-live="polite"></small>
+                    </div>
+                </div>
+
+                <div class="fila">
+                    <div class="campo">
+                        <label for="clave">Contraseña</label>
+                        <input type="password" id="clave" name="clave" autocomplete="new-password"
+                            aria-describedby="ayuda-clave error-clave">
+                        <small class="ayuda" id="ayuda-clave">Mínimo 8 caracteres, con letras y números.</small>
+                        <small class="error" id="error-clave" aria-live="polite"></small>
+                    </div>
+                    <div class="campo">
+                        <label for="confirmar">Repite la contraseña</label>
+                        <input type="password" id="confirmar" name="confirmar" autocomplete="new-password"
+                            aria-describedby="error-confirmar">
+                        <small class="error" id="error-confirmar" aria-live="polite"></small>
+                    </div>
+                </div>
+
+                <div class="campo campo-opcion">
+                    <label class="opcion" for="ver-claves">
+                        <input type="checkbox" id="ver-claves" onchange="alternarClaves(this, ['clave', 'confirmar'])">
+                        Mostrar contraseñas
+                    </label>
+                </div>
+
+                <div class="campo campo-opcion">
+                    <label class="opcion" for="terminos">
+                        <input type="checkbox" id="terminos" name="terminos" aria-describedby="error-terminos">
+                        Acepto las normas de la comunidad EcoRead.
+                    </label>
+                    <small class="error" id="error-terminos" aria-live="polite"></small>
+                </div>
+
+                <div class="acciones">
+                    <button type="submit" class="boton">Crear cuenta</button>
+                </div>
+
+                <p class="mensaje" id="mensaje-registro" aria-live="polite"></p>
+            </form>
+
+            <p class="cambio">¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a></p>
+        </section>
+
+        <!-- Ficha de lector: se llena mientras se escribe el formulario -->
+        <aside class="ficha" aria-label="Vista previa de tu ficha de lector">
+            <h2>Ficha de lector</h2>
+            <dl>
+                <div class="ficha-fila">
+                    <dt>Lector/a</dt>
+                    <dd id="ficha-nombre" class="vacio">Tu nombre</dd>
+                </div>
+                <div class="ficha-fila">
+                    <dt>Correo</dt>
+                    <dd id="ficha-correo" class="vacio">tu.correo@universidad.ac.cr</dd>
+                </div>
+                <div class="ficha-fila">
+                    <dt>Universidad</dt>
+                    <dd id="ficha-universidad" class="vacio">Tu universidad</dd>
+                </div>
+                <div class="ficha-fila">
+                    <dt>Carrera</dt>
+                    <dd id="ficha-carrera" class="vacio">Tu carrera</dd>
+                </div>
+            </dl>
+            <div class="sello" id="sello" aria-hidden="true">
+                <strong>EcoRead</strong>
+                <span>Lector/a desde</span>
+                <span id="sello-fecha"></span>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="pie">
+        <p>&copy; 2026 EcoRead. Proyecto de Ambiente Web Cliente/Servidor, Universidad Fidélitas.</p>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script>
+        actualizarFicha();
+    </script>
+</body>
+
+</html>

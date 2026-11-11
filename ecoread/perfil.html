@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi perfil | EcoRead</title>
+    <link rel="icon" href="img/logo.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+
+<body>
+    <!-- Encabezado -->
+    <header class="encabezado">
+        <!-- TODO: cambiar a index.html cuando exista la página de inicio -->
+        <a class="marca" href="login.html">
+            <img src="img/logo.svg" alt="" width="36" height="36">
+            <span>EcoRead</span>
+        </a>
+        <nav aria-label="Menú principal">
+            <ul>
+                <li><a href="login.html">Iniciar sesión</a></li>
+                <li><a href="registro.html">Crear cuenta</a></li>
+                <li><a href="perfil.html" aria-current="page">Mi perfil</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="pagina pagina-perfil">
+        <div class="perfil-titulo">
+            <h1>Mi perfil</h1>
+            <button type="button" class="boton boton-secundario" onclick="cerrarSesion()">Cerrar sesión</button>
+        </div>
+
+        <!-- Ficha de lector con el resumen de la cuenta -->
+        <aside class="ficha" aria-label="Resumen de tu cuenta">
+            <div class="avatar" id="avatar" aria-hidden="true"></div>
+            <h2>Ficha de lector</h2>
+            <dl>
+                <div class="ficha-fila">
+                    <dt>Lector/a</dt>
+                    <dd id="ficha-nombre"></dd>
+                </div>
+                <div class="ficha-fila">
+                    <dt>Correo</dt>
+                    <dd id="ficha-correo"></dd>
+                </div>
+                <div class="ficha-fila">
+                    <dt>Universidad</dt>
+                    <dd id="ficha-universidad"></dd>
+                </div>
+                <div class="ficha-fila">
+                    <dt>Carrera</dt>
+                    <dd id="ficha-carrera"></dd>
+                </div>
+            </dl>
+
+            <ul class="estadisticas">
+                <li><span>Libros publicados</span> <strong id="total-publicaciones">0</strong></li>
+                <li><span>Intercambios realizados</span> <strong id="total-intercambios">0</strong></li>
+                <li><span>Solicitudes pendientes</span> <strong id="total-solicitudes">0</strong></li>
+            </ul>
+
+            <div class="sello activo fijo" aria-hidden="true">
+                <strong>EcoRead</strong>
+                <span>Lector/a desde</span>
+                <span id="sello-fecha"></span>
+            </div>
+        </aside>
+
+        <div>
+            <!-- Datos personales -->
+            <section class="bloque">
+                <h2>Datos personales</h2>
+                <form id="formPerfil" action="php/perfil.php" method="POST" onsubmit="return guardarPerfil()" novalidate>
+                    <fieldset id="campos-perfil" disabled>
+                        <div class="campo">
+                            <label for="nombre">Nombre completo</label>
+                            <input type="text" id="nombre" name="nombre" autocomplete="name"
+                                aria-describedby="error-nombre">
+                            <small class="error" id="error-nombre" aria-live="polite"></small>
+                        </div>
+
+                        <div class="campo">
+                            <label for="correo">Correo</label>
+                            <input type="email" id="correo" name="correo" readonly aria-describedby="ayuda-correo">
+                            <small class="ayuda" id="ayuda-correo">El correo no se puede cambiar.</small>
+                        </div>
+
+                        <div class="fila">
+                            <div class="campo">
+                                <label for="telefono">Teléfono</label>
+                                <input type="tel" id="telefono" name="telefono" placeholder="Sin teléfono registrado"
+                                    autocomplete="tel" aria-describedby="error-telefono">
+                                <small class="error" id="error-telefono" aria-live="polite"></small>
+                            </div>
+                            <div class="campo">
+                                <label for="universidad">Universidad</label>
+                                <select id="universidad" name="universidad" aria-describedby="error-universidad">
+                                    <option value="">Selecciona una</option>
+                                    <option value="fidelitas">Universidad Fidélitas</option>
+                                    <option value="ucr">Universidad de Costa Rica</option>
+                                    <option value="tec">Tecnológico de Costa Rica</option>
+                                    <option value="una">Universidad Nacional</option>
+                                    <option value="uned">Universidad Estatal a Distancia</option>
+                                    <option value="otra">Otra universidad</option>
+                                </select>
+                                <small class="error" id="error-universidad" aria-live="polite"></small>
+                            </div>
+                        </div>
+
+                        <div class="campo">
+                            <label for="carrera">Carrera</label>
+                            <input type="text" id="carrera" name="carrera" aria-describedby="error-carrera">
+                            <small class="error" id="error-carrera" aria-live="polite"></small>
+                        </div>
+                    </fieldset>
+
+                    <div class="acciones">
+                        <button type="button" class="boton" id="btn-editar" onclick="activarEdicion(true)">Editar datos</button>
+                        <button type="submit" class="boton" id="btn-guardar" hidden>Guardar cambios</button>
+                        <button type="button" class="boton boton-secundario" id="btn-cancelar" onclick="cancelarEdicion()" hidden>Cancelar</button>
+                    </div>
+
+                    <p class="mensaje" id="mensaje-perfil" aria-live="polite"></p>
+                </form>
+            </section>
+
+            <!-- Cambio de contraseña -->
+            <section class="bloque">
+                <h2>Cambiar contraseña</h2>
+                <form id="formClave" action="php/clave.php" method="POST" onsubmit="return cambiarClave()" novalidate>
+                    <div class="campo">
+                        <label for="clave-actual">Contraseña actual</label>
+                        <input type="password" id="clave-actual" name="clave_actual" autocomplete="current-password"
+                            aria-describedby="error-clave-actual">
+                        <small class="error" id="error-clave-actual" aria-live="polite"></small>
+                    </div>
+
+                    <div class="fila">
+                        <div class="campo">
+                            <label for="clave-nueva">Nueva contraseña</label>
+                            <input type="password" id="clave-nueva" name="clave_nueva" autocomplete="new-password"
+                                aria-describedby="ayuda-clave error-clave-nueva">
+                            <small class="ayuda" id="ayuda-clave">Mínimo 8 caracteres, con letras y números.</small>
+                            <small class="error" id="error-clave-nueva" aria-live="polite"></small>
+                        </div>
+                        <div class="campo">
+                            <label for="clave-confirmar">Repite la nueva contraseña</label>
+                            <input type="password" id="clave-confirmar" name="clave_confirmar" autocomplete="new-password"
+                                aria-describedby="error-clave-confirmar">
+                            <small class="error" id="error-clave-confirmar" aria-live="polite"></small>
+                        </div>
+                    </div>
+
+                    <div class="campo campo-opcion">
+                        <label class="opcion" for="ver-claves">
+                            <input type="checkbox" id="ver-claves"
+                                onchange="alternarClaves(this, ['clave-actual', 'clave-nueva', 'clave-confirmar'])">
+                            Mostrar contraseñas
+                        </label>
+                    </div>
+
+                    <div class="acciones">
+                        <button type="submit" class="boton">Actualizar contraseña</button>
+                    </div>
+
+                    <p class="mensaje" id="mensaje-clave" aria-live="polite"></p>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="pie">
+        <p>&copy; 2026 EcoRead. Proyecto de Ambiente Web Cliente/Servidor, Universidad Fidélitas.</p>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/perfil.js"></script>
+    <script>
+        cargarPerfil();
+    </script>
+</body>
+
+</html>

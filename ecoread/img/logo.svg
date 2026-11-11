@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" role="img" aria-label="EcoRead">
+  <rect width="48" height="48" rx="10" fill="#1f5a45"/>
+  <path d="M9 13c6-1.5 11 0 15 3.5v20c-4-3-9-4.2-15-3z" fill="#faf7ec"/>
+  <path d="M39 13c-6-1.5-11 0-15 3.5v20c4-3 9-4.2 15-3z" fill="#e7e3cf"/>
+  <path d="M26 15c1-5 6-8 12-7-.5 6-4.5 10-12 7z" fill="#c8922a"/>
+</svg>
